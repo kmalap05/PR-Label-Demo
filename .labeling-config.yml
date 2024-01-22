@@ -1,7 +1,0 @@
-exclusions:
-  - path: "tests/"
-    type: "directory"
-  - path: "config.json"
-    type: "file"
-  - path: "*.md"
-    type: "pattern"
