@@ -17,6 +17,13 @@ async function run() {
 
     // Read template and get label selections
     const template = pr.data.body;
+    const labelMatches = template.match(/- \[x\] (.*)/g);
+
+    if (!labelMatches) {
+      console.log("No label selections found in the template.");
+      return;
+    }
+
     const labelSelections = template
       .match(/- \[x\] (.*)/g)
       .map((label) => label.split(" ")[2]);
