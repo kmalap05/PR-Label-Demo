@@ -21,9 +21,11 @@ jobs:
           python-version: 3.x
 
       - name: Install dependencies
-        run: pip install PyYAML
+        run: |
+          pip install PyYAML
+          pip install PyGithub
 
       - name: Run Labeler Script
         run: python .github/labeler.py
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
