@@ -1,5 +1,6 @@
 # .github/labeler.py
 import os
+import json
 import yaml
 from github import Github
 
