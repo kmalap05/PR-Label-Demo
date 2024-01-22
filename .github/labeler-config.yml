@@ -1,0 +1,12 @@
+# .github/labeler-config.yml
+
+fileExtensions:
+  - js
+  - css
+  - html
+
+exclusions:
+  - path: tests/
+    type: directory
+  - path: config.json
+    type: file
