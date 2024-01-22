@@ -1,0 +1,11 @@
+# .github/labeling-config.yml
+
+# Patterns to ignore when assigning labels
+ignorePatterns:
+  - "node_modules/**"
+  - "dist/**"
+
+# File extensions to ignore
+ignoreExtensions:
+  - ".log"
+  - ".md"
