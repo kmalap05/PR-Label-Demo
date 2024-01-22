@@ -17,7 +17,7 @@ async function run() {
     labels: selectedLabels,
   });
 }
-
+//
 async function getPRTemplate(prNumber) {
   const octokit = new GitHub(process.env.GITHUB_TOKEN);
   const response = await octokit.pulls.get({
