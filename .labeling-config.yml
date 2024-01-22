@@ -1,4 +1,3 @@
-# .labeling-config.yml
 exclusions:
   - path: "tests/"
     type: "directory"
