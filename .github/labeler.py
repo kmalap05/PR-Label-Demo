@@ -34,7 +34,7 @@ def apply_labels(token, pr_number, file_extensions, exclusions):
     pr.add_to_labels(*labels)
 
 if __name__ == "__main__":
-    token = os.environ['GITHUB_TOKEN']
+    token = os.environ['MY_GITHUB_TOKEN']
     pr_number = int(os.environ['GITHUB_EVENT_PATH'].split('/')[-1].split('.')[0])
 
     with open('.github/labeler-config.yml', 'r') as config_file:
