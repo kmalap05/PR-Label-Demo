@@ -1,4 +1,4 @@
-name: PR Labeling
+name: PR Labeler
 
 on:
   pull_request:
@@ -7,22 +7,20 @@ on:
       - synchronize
 
 jobs:
-  label-pr:
+  pr-labeler:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 14
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: Label PR
-        run: node .github/scripts/label-pr.js
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run labeler
+        run: npx labeler --config .github/labeler-config.yml

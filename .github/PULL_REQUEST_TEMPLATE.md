@@ -1,14 +1,18 @@
----
-name: Pull Request Template
-about: Describe this pull request's purpose and any changes.
----
+<!-- .github/PULL_REQUEST_TEMPLATE.md -->
 
-## Type of Change
+### Type of Change
 
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Breaking change
+- [ ] Feature
+- [ ] Bug Fix
+- [ ] Documentation
+- [ ] Other
 
-## Description
+### Description
 
-...
+<!-- Provide a brief description of the changes -->
+
+### Checklist
+
+- [ ] I have tested the changes locally
+- [ ] I have updated the documentation
+- [ ] I have considered potential side effects
