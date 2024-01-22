@@ -34,8 +34,12 @@ def apply_labels(token, pr_number, file_extensions, exclusions):
     pr.add_to_labels(*labels)
 
 if __name__ == "__main__":
-    token = os.environ['GITHUB_TOKEN']
-    pr_number = int(os.environ['GITHUB_EVENT_PATH'].split('/')[-1].split('.')[0])
+    token = os.environ['MY_GITHUB_TOKEN']
+    
+    # Extract the pull request number from the event payload
+    with open(os.environ['GITHUB_EVENT_PATH'], 'r') as event_file:
+        event_payload = json.load(event_file)
+        pr_number = event_payload['pull_request']['number']
 
     with open('.github/labeler-config.yml', 'r') as config_file:
         config = yaml.safe_load(config_file)
