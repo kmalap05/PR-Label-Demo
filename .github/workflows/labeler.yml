@@ -25,4 +25,4 @@ jobs:
       - name: Run labeler script
         run: node .github/scripts/labeler.js
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
