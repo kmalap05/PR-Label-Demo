@@ -1,14 +1,12 @@
 const { execSync } = require("child_process");
-const { Octokit } = require("@octokit/rest");
+const { GitHub, context } = require("@actions/github");
 
-const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN,
-});
+const octokit = new GitHub(process.env.GITHUB_TOKEN);
 
 function addLabel(prNumber, label) {
   octokit.issues.addLabels({
-    owner: process.env.GITHUB_REPOSITORY.split("/")[0],
-    repo: process.env.GITHUB_REPOSITORY.split("/")[1],
+    owner: context.repo.owner,
+    repo: context.repo.repo,
     issue_number: prNumber,
     labels: [label],
   });
@@ -16,10 +14,10 @@ function addLabel(prNumber, label) {
 }
 
 async function main() {
-  const prNumber = process.env.GITHUB_EVENT_NUMBER;
+  const prNumber = context.issue.number;
   const pr = await octokit.pulls.get({
-    owner: process.env.GITHUB_REPOSITORY.split("/")[0],
-    repo: process.env.GITHUB_REPOSITORY.split("/")[1],
+    owner: context.repo.owner,
+    repo: context.repo.repo,
     pull_number: prNumber,
   });
   const prBody = pr.data.body;
@@ -38,4 +36,7 @@ async function main() {
   }
 }
 
-main();
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
