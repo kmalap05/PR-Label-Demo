@@ -1,11 +1,10 @@
-# .github/labeling-config.yml
+# .github/labeler-config.yml
+exclusions:
+  - "**/*.md"
+  - "**/node_modules/**"
 
-# Patterns to ignore when assigning labels
-ignorePatterns:
-  - "node_modules/**"
-  - "dist/**"
-
-# File extensions to ignore
-ignoreExtensions:
-  - ".log"
-  - ".md"
+mappings:
+  - name: "JavaScript"
+    pattern: "**/*.js"
+  - name: "CSS"
+    pattern: "**/*.css"

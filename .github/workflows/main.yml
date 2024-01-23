@@ -1,0 +1,26 @@
+name: PR Labeling
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  label-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "14"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run labeling script
+        run: node .github/scripts/label-pr.js ${{ github.event.number }}
