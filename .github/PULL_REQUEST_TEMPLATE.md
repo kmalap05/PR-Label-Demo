@@ -1,18 +1,16 @@
-<!-- .github/PULL_REQUEST_TEMPLATE.md -->
+# Pull Request
 
-### Type of Change
+## Type of Change
 
 - [ ] Feature
 - [ ] Bug Fix
-- [ ] Documentation
+- [ ] Refactor
 - [ ] Other
 
-### Description
+## Related Issue
 
-<!-- Provide a brief description of the changes -->
+<!-- Reference the issue this PR addresses -->
 
-### Checklist
+## Description
 
-- [ ] I have tested the changes locally
-- [ ] I have updated the documentation
-- [ ] I have considered potential side effects
+<!-- Describe the changes made in this PR -->
