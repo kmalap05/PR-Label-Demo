@@ -16,22 +16,22 @@ labels:
         any:
           - "*.css"
 
-  - label: "Feature"
+  - label: "feature"
     sync: true
     matcher:
       body: "/\\[x\\] Feature/"
 
-  - label: "Bug Fix"
+  - label: "bug fix"
     sync: true
     matcher:
       body: "/\\[x\\] Bug Fix/"
 
-  - label: "Documentation"
+  - label: "documentation"
     sync: true
     matcher:
       body: "/\\[x\\] Documentation/"
 
-  - label: "Other"
+  - label: "other"
     sync: true
     matcher:
       body: "/\\[x\\] Other/"
