@@ -1,7 +1,7 @@
 version: v1
 
 labels:
-  - label: "javascript-changes"
+  - label: "javascript"
     sync: true
     matcher:
       files:
@@ -9,12 +9,19 @@ labels:
           - "*.js"
           - "*.jsx"
 
-  - label: "css-changes"
+  - label: "css"
     sync: true
     matcher:
       files:
         any:
           - "*.css"
+
+  - label: "yaml"
+    sync: true
+    matcher:
+      files:
+        any:
+          - "*.yml"
 
   - label: "Feature"
     sync: true
