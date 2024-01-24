@@ -8,7 +8,7 @@ labels:
         any:
           - "*.js"
           - "*.jsx"
-    
+
   - label: "css-changes"
     sync: true
     matcher:
@@ -19,19 +19,19 @@ labels:
   - label: "Feature"
     sync: true
     matcher:
-        body: "/\[x\] Feature/"
+      body: "/\\[x\\] Feature/"
 
   - label: "Bug Fix"
     sync: true
     matcher:
-        body: "/\[x\] Bug Fix/"
+      body: "/\\[x\\] Bug Fix/"
 
   - label: "Documentation"
     sync: true
     matcher:
-        body: "/\[x\] Documentation/"
+      body: "/\\[x\\] Documentation/"
 
   - label: "Other"
     sync: true
     matcher:
-        body: "/\[x\] Other/"
+      body: "/\\[x\\] Other/"
