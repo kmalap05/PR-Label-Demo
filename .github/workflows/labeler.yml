@@ -2,11 +2,11 @@ on:
   pull_request:
 
 permissions:
-  contents: read # the config file
-  issues: write # for labeling issues (on: issues)
-  pull-requests: write # for labeling pull requests (on: pull_request_target or on: pull_request)
-  statuses: write # to generate status
-  checks: write # to generate status
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: write
+  checks: write
 
 jobs:
   labeler:
@@ -14,7 +14,3 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: fuxingloh/multi-labeler@v2
-        # with:
-        #   github-token: ${{secrets.GITHUB_TOKEN}}
-        #   config-path: .github/labeler.yml
-        #   config-repo: my-org/my-repo
