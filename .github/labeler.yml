@@ -7,7 +7,6 @@ labels:
       files:
         any:
           - "*.js"
-          - "*.jsx"
 
   - label: "css"
     sync: true
