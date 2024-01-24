@@ -1,29 +1,20 @@
-name: Pull Request Labeler
-
 on:
   pull_request:
-    paths:
-      - "**/*"
+
+permissions:
+  contents: read # the config file
+  issues: write # for labeling issues (on: issues)
+  pull-requests: write # for labeling pull requests (on: pull_request_target or on: pull_request)
+  statuses: write # to generate status
+  checks: write # to generate status
 
 jobs:
   labeler:
+    name: Labeler
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - uses: fuxingloh/multi-labeler@v2
         with:
-          python-version: "3.x"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install PyYAML
-
-      - name: Analyze modified files and label
-        run: python .github/labeler.py
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          config-path: .github/labeler.yml
+          config-repo: my-org/my-repo

@@ -1,0 +1,37 @@
+version: v1
+
+labels:
+  - label: "javascript-changes"
+    sync: true
+    matcher:
+      files:
+        any:
+          - "*.js"
+          - "*.jsx"
+    
+  - label: "css-changes"
+    sync: true
+    matcher:
+      files:
+        any:
+          - "*.css"
+
+  - label: "Feature"
+    sync: true
+    matcher:
+        body: "/\[x\] Feature/"
+
+  - label: "Bug Fix"
+    sync: true
+    matcher:
+        body: "/\[x\] Bug Fix/"
+
+  - label: "Documentation"
+    sync: true
+    matcher:
+        body: "/\[x\] Documentation/"
+
+  - label: "Other"
+    sync: true
+    matcher:
+        body: "/\[x\] Other/"
