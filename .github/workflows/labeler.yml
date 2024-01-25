@@ -14,3 +14,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: fuxingloh/multi-labeler@v2
+
+  label-colorizer:
+    name: Label Colorizer
+    runs-on: ubuntu-latest
+    needs: labeler
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - name: Install dependencies
+        run: npm install @actions/core @actions/github
+      - name: Colorize Label
+        run: |
+          const core = require('@actions/core');
+          const github = require('@actions/github');
+          async function run() {
+            try {
+              const token = core.getInput('github-token');
+              const octokit = github.getOctokit(token);
+              const prNumber = github.context.payload.pull_request.number;
+
+             // Assuming you have a label named 'needs-review' that you want to colorize
+              await octokit.issues.updateLabel({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                name: 'needs-review',
+                color: 'ff0000'  // Replace with your desired color
+              });
+            } catch (error) {
+              core.setFailed(error.message);
+            }
+          }
+          run();
+          env:
+            GITHUB_TOKEN: ${{ github.token }}
