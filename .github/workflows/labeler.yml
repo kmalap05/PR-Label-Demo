@@ -14,3 +14,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: fuxingloh/multi-labeler@v2
+
+  label_setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Label Colors
+        run: |
+          gh repo label create javascript -c f1e05a
+          gh repo label create css -c 563d7c
+          gh repo label create yaml -c a5a5a5
+          gh repo label create feature -c d73a4a
+          gh repo label create "bug fix" -c d73a4a
+          gh repo label create documentation -c 0075ca
+          gh repo label create other -c b4d839
