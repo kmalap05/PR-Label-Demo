@@ -1,7 +1,7 @@
 const { context, getOctokit } = require("@actions/github");
 
 async function run() {
-  const token = process.env.GITHUB_TOKEN;
+  const token = github.token;
   const octokit = getOctokit(token);
 
   const prNumber = context.payload.pull_request.number;
