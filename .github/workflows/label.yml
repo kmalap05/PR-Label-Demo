@@ -1,8 +1,13 @@
-name: Labeler
-
 on:
   pull_request:
     types: [opened, edited, closed, reopened, ready_for_review, synchronize]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: write
+  checks: write
 
 jobs:
   label:
