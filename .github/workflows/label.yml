@@ -1,5 +1,3 @@
-name: Labeler
-
 on:
   pull_request:
     types: [opened, edited, closed, reopened, ready_for_review, synchronize]
