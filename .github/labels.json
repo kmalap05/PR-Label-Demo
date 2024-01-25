@@ -33,6 +33,7 @@
   },
   "pr": {
     "Feature": {
+      "requires": 1,
       "conditions": [
         {
           "type": "descriptionMatches",
@@ -41,6 +42,7 @@
       ]
     },
     "Bug Fix": {
+      "requires": 1,
       "conditions": [
         {
           "type": "descriptionMatches",
@@ -49,6 +51,7 @@
       ]
     },
     "Documentation": {
+      "requires": 1,
       "conditions": [
         {
           "type": "descriptionMatches",
@@ -57,6 +60,7 @@
       ]
     },
     "Other": {
+      "requires": 1,
       "conditions": [
         {
           "type": "descriptionMatches",
@@ -65,6 +69,7 @@
       ]
     },
     "JavaScript": {
+      "requires": 1,
       "conditions": [
         {
           "type": "filesMatch",
@@ -73,6 +78,7 @@
       ]
     },
     "CSS": {
+      "requires": 1,
       "conditions": [
         {
           "type": "filesMatch",
