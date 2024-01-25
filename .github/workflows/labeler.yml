@@ -20,9 +20,7 @@ jobs:
           node-version: "14"
 
       - name: Install dependencies
-        run: |
-          npm install @actions/core@^1.2.6
-          npm install @actions/github@^5.0.0
+        run: npm install
 
       - name: Run labeler
         run: node .github/labeler.js
