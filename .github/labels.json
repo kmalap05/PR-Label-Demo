@@ -1,0 +1,84 @@
+{
+  "labels": {
+    "Feature": {
+      "name": "feature",
+      "colour": "00ff00",
+      "description": "New feature."
+    },
+    "Bug Fix": {
+      "name": "bug fix",
+      "color": "00ff00",
+      "description": "Fixes bugs."
+    },
+    "Documentation": {
+      "name": "documentation",
+      "color": "00ff00",
+      "description": "Documentation."
+    },
+    "Other": {
+      "name": "other",
+      "color": "00ff00",
+      "description": "Other changes."
+    },
+    "JavaScript": {
+      "name": "javascript",
+      "color": "008672",
+      "description": "JavaScript changes."
+    },
+    "CSS": {
+      "name": "css",
+      "color": "008672",
+      "description": "CSS changes."
+    }
+  },
+  "pr": {
+    "Feature": {
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": ".*\\[x\\] Feature.*"
+        }
+      ]
+    },
+    "Bug Fix": {
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": ".*\\[x\\] Bug Fix.*"
+        }
+      ]
+    },
+    "Documentation": {
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": ".*\\[x\\] Documentation.*"
+        }
+      ]
+    },
+    "Other": {
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": ".*\\[x\\] Other.*"
+        }
+      ]
+    },
+    "JavaScript": {
+      "conditions": [
+        {
+          "type": "filesMatch",
+          "glob": "*.js"
+        }
+      ]
+    },
+    "CSS": {
+      "conditions": [
+        {
+          "type": "filesMatch",
+          "glob": "*.css"
+        }
+      ]
+    }
+  }
+}
