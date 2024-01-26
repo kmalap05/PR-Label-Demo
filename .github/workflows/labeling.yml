@@ -22,7 +22,7 @@ jobs:
             const prNumber = context.payload.pull_request.number;
 
             // Add a label to the pull request
-            await github.issues.addLabels({
+            await github.rest.issues.addLabels({
               owner,
               repo,
               issue_number: prNumber,
