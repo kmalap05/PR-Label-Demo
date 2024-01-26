@@ -4,7 +4,6 @@ on:
   pull_request:
     types:
       - opened
-      - synchronize
 
 jobs:
   auto-label:
@@ -14,69 +13,42 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set Labels and Colors
+      - name: Set Labels
         uses: actions/github-script@v7
         with:
-          github-token: ${{ github.token }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const fs = require('fs');
+            const labels = ['Feature', 'BugFix', 'Enhancement'];
+            const labelColors = ['#FF0000', '#FF0000', '#FF0000']; // Replace with your desired color codes
 
-            const prPayload = context.payload.pull_request;
-
-            if (!prPayload) {
-              console.error('Unable to retrieve pull request information.');
-              return;
-            }
+            const languages = ['JavaScript', 'Python', 'Java']; // Add more as needed
+            const languageColors = ['#00FF00', '#00FF00', '#00FF00']; // Replace with your desired color codes
 
             const prNumber = context.payload.pull_request.number;
+
+            await github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              labels: labels,
+            });
+
+            // Add language labels
+            // You may need to customize this based on your repository structure
             const modifiedFiles = await github.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: prNumber,
             });
 
-            // Function to set label color
-            const setLabelColor = async (label, color) => {
-              await github.pulls.updateLabel({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                name: label,
-                color: color,
-              });
-            };
-
-            // Read label conditions from file
-            const labelConditionsPath = '.github/label-conditions.json';
-            const labelConditions = JSON.parse(fs.readFileSync(labelConditionsPath, 'utf8'));
-
-            // Apply labels based on description
-            for (const labelCondition of labelConditions) {
-              if (shouldApplyLabel(labelCondition)) {
-                await github.pulls.addLabels({
+            for (const file of modifiedFiles.data) {
+              const languageLabel = languages.find(lang => file.filename.includes(lang));
+              if (languageLabel) {
+                await github.issues.addLabels({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: prNumber,
-                  labels: [labelCondition.label],
+                  labels: [languageLabel],
                 });
-              }
-            }
-
-            // Read ignore patterns from file
-            const ignorePatternsPath = '.github/ignore-patterns.json';
-            const ignorePatterns = JSON.parse(fs.readFileSync(ignorePatternsPath, 'utf8'));
-
-            // Apply labels based on modified files and ignore patterns
-            for (const file of modifiedFiles.data) {
-              const lowercaseFilename = file.filename.toLowerCase();
-              if (!ignorePatterns.some(pattern => new RegExp(pattern).test(lowercaseFilename))) {
-                const extension = lowercaseFilename.split('.').pop();
-                if (labelConditions.some(labelCondition => labelCondition.keywords.includes(extension))) {
-                  await github.pulls.addLabels({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    issue_number: prNumber,
-                    labels: [extension],
-                  });
-                }
               }
             }
