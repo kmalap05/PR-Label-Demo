@@ -1,0 +1,20 @@
+{
+  "labelConditions": [
+    {
+      "label": "Feature",
+      "keywords": [".*\\[x\\] Feature."]
+    },
+    {
+      "label": "BugFix",
+      "keywords": [".*\\[x\\] Bug Fix."]
+    },
+    {
+      "label": "Enhancement",
+      "keywords": [".*\\[x\\] Documentation."]
+    },
+    {
+      "label": "Other",
+      "keywords": [".*\\[x\\] Other."]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+name: Auto Labeling
+
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  auto-label:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set Labels and Colors
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+
+            const prNumber = context.payload.pull_request.number;
+            const modifiedFiles = await github.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            // Function to set label color
+            const setLabelColor = async (label, color) => {
+              await github.pulls.updateLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: label,
+                color: color,
+              });
+            };
+
+            // Read label conditions from file
+            const labelConditionsPath = '.github/label-conditions.json';
+            const labelConditions = JSON.parse(fs.readFileSync(labelConditionsPath, 'utf8'));
+
+            // Apply labels based on description
+            for (const labelCondition of labelConditions) {
+              if (shouldApplyLabel(labelCondition)) {
+                await github.pulls.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: prNumber,
+                  labels: [labelCondition.label],
+                });
+              }
+            }
+
+            // Read ignore patterns from file
+            const ignorePatternsPath = '.github/ignore-patterns.json';
+            const ignorePatterns = JSON.parse(fs.readFileSync(ignorePatternsPath, 'utf8'));
+
+            // Apply labels based on modified files and ignore patterns
+            for (const file of modifiedFiles.data) {
+              const lowercaseFilename = file.filename.toLowerCase();
+              if (!ignorePatterns.some(pattern => new RegExp(pattern).test(lowercaseFilename))) {
+                const extension = lowercaseFilename.split('.').pop();
+                if (labelConditions.some(labelCondition => labelCondition.keywords.includes(extension))) {
+                  await github.pulls.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: prNumber,
+                    labels: [extension],
+                  });
+                }
+              }
+            }
