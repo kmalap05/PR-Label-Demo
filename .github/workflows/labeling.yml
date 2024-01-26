@@ -16,9 +16,16 @@ jobs:
       - name: Set Labels and Colors
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ github.token }}
           script: |
             const fs = require('fs');
+
+            const prPayload = context.payload.pull_request;
+
+            if (!prPayload) {
+              console.error('Unable to retrieve pull request information.');
+              return;
+            }
 
             const prNumber = context.payload.pull_request.number;
             const modifiedFiles = await github.pulls.listFiles({
