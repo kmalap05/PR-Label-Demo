@@ -1,4 +1,4 @@
-name: Auto Labeling
+name: GitHub Script Example
 
 on:
   pull_request:
@@ -7,49 +7,24 @@ on:
       - synchronize
 
 jobs:
-  auto-label:
+  label-pr:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set Labels
+      - name: Run GitHub Script
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const labels = ['Feature', 'BugFix', 'Enhancement'];
-            const labelColors = ['#FF0000', '#FF0000', '#FF0000']; // Replace with your desired color codes
-
-            const languages = ['JavaScript', 'Python', 'Java']; // Add more as needed
-            const languageColors = ['#00FF00', '#00FF00', '#00FF00']; // Replace with your desired color codes
-
+            const { owner, repo } = context.repo;
             const prNumber = context.payload.pull_request.number;
 
+            // Add a label to the pull request
             await github.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              owner,
+              repo,
               issue_number: prNumber,
-              labels: labels,
+              labels: ['your-label-name']
             });
-
-            // Add language labels
-            // You may need to customize this based on your repository structure
-            const modifiedFiles = await github.pulls.listFiles({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-            });
-
-            for (const file of modifiedFiles.data) {
-              const languageLabel = languages.find(lang => file.filename.includes(lang));
-              if (languageLabel) {
-                await github.issues.addLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: prNumber,
-                  labels: [languageLabel],
-                });
-              }
-            }
