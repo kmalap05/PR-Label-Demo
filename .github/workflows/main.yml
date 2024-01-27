@@ -1,23 +1,26 @@
-on:
-  issues:
-    types: [opened, edited, closed, reopened]
-  pull_request:
-    types: [opened, edited, closed, reopened, ready_for_review, synchronize]
+name: Auto Label on Pull Request
 
-permissions:
-  contents: read
-  issues: write
-  pull-requests: write
-  statuses: write
-  checks: write
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
 
 jobs:
-  label:
+  auto-label:
     runs-on: ubuntu-latest
-    name: Label pull requests
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: IvanFon/super-labeler-action@v1
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          github-token: "${{ github.token }}"
-          config: ./.github/config/labels.json
+          node-version: "14"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Auto Label on Pull Request
+        run: node .github/auto-label.js
