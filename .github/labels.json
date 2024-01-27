@@ -1,0 +1,20 @@
+{
+  "labels": {
+    "bugfix": {
+      "name": "Bugfix! 🎉",
+      "colour": "ff0000",
+      "description": "Fixes a bug."
+    }
+  },
+  "pr": {
+    "bugfix": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "branchMatches",
+          "pattern": "^bugfix"
+        }
+      ]
+    }
+  }
+}
