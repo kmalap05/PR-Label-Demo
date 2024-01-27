@@ -32,4 +32,4 @@ jobs:
             // You can add more conditions and labels as needed
 
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
