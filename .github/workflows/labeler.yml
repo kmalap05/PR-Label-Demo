@@ -1,0 +1,75 @@
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: write
+  checks: write
+
+jobs:
+  labeler:
+    name: Labeler
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fuxingloh/multi-labeler@v2
+
+  update-label-colors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Update Label Colors
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const octokit = require('@octokit/rest')();
+            octokit.authenticate({
+              type: 'token',
+              token: process.env.GITHUB_TOKEN,
+            });
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const labelMappings = {
+             'feature': 'red',
+              'bug fix': 'red',
+              'documentation': 'red',
+              'other': 'red',
+              'javascript': 'green',
+              'css': 'green',
+            };
+
+            try {
+              for (const labelName in labelMappings) {
+                const existingLabel = await octokit.issues.getLabel({
+                  owner,
+                  repo,
+                  name: labelName,
+                });
+
+                if (existingLabel) {
+                  const newColor = labelMappings[labelName];
+
+                  await octokit.issues.updateLabel({
+                    owner,
+                    repo,
+                    current_name: labelName,
+                    name: labelName,
+                    color: newColor,
+                    description: existingLabel.data.description,
+                  });
+
+                  console.log(`Label '${labelName}' color updated to #${newColor}`);
+                } else {
+                  console.warn(`Label '${labelName}' not found. Skipping color update.`);
+                }
+              }
+            } catch (error) {
+              console.error(`Error updating label colors: ${error.message}`);
+              process.exit(1);
+            }

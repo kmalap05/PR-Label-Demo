@@ -1,0 +1,43 @@
+version: v1
+
+labels:
+  - label: "javascript"
+    sync: true
+    matcher:
+      files:
+        any:
+          - "*.js"
+
+  - label: "css"
+    sync: true
+    matcher:
+      files:
+        any:
+          - "*.css"
+
+  - label: "yaml"
+    sync: true
+    matcher:
+      files:
+        any:
+          - "*.yml"
+
+  - label: "feature"
+    sync: true
+    matcher:
+      body: ".*\\[x\\] Feature.*"
+
+  - label: "bug fix"
+    sync: true
+    matcher:
+      body: ".*\\[x\\] Bug Fix.*"
+
+  - label: "documentation"
+    sync: true
+    matcher:
+      body: ".*\\[x\\] Documentation.*"
+
+  - label: "other"
+    sync: true
+    matcher:
+      body: ".*\\[x\\] Other.*"
