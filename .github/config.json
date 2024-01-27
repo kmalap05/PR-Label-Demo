@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "feature": {
+      "name": "feature",
+      "color": "ff0000",
+      "description": "Feature label"
+    },
+    "bug fix": {
+      "name": "big fix",
+      "color": "ff0000",
+      "description": "Bug fix label"
+    },
+    "documentation": {
+      "name": "documentation",
+      "color": "ff0000",
+      "description": "Documentation label"
+    },
+    "other": {
+      "name": "other",
+      "color": "ff0000",
+      "description": "Other label"
+    },
+    "javascript": {
+      "name": "javascript",
+      "color": "0000ff",
+      "description": "JavaScript label"
+    },
+    "css": {
+      "name": "css",
+      "color": "0000ff",
+      "description": "CSS label"
+    }
+  },
+  "pr": {
+    "bugfix": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "branchMatches",
+          "pattern": "^bugfix"
+        }
+      ]
+    }
+  },
+  "skip_labeling": true,
+  "delete_labels": true
+}
