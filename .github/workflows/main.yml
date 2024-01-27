@@ -13,3 +13,4 @@ jobs:
       - uses: IvanFon/super-labeler-action@v1
         with:
           github-token: "${{ github.token }}"
+          config: .github/config/labels.json
