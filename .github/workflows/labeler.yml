@@ -1,78 +1,35 @@
+name: Label Pull Request
+
 on:
   pull_request:
-
-permissions:
-  contents: read
-  issues: write
-  pull-requests: write
-  statuses: write
-  checks: write
+    types:
+      - opened
+      - synchronize
 
 jobs:
-  labeler:
-    name: Labeler
+  label:
     runs-on: ubuntu-latest
-    steps:
-      - uses: fuxingloh/multi-labeler@v2
 
-  update-label-colors:
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install Dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Update Label Colors
+      - name: Label Pull Request
         uses: actions/github-script@v7
         with:
-          github-token: ${{ github.token }}
           script: |
-            const octokit = require('@octokit/rest')();
-            octokit.authenticate({
-              type: 'token',
-              token: process.env.GITHUB_TOKEN,
-            });
+            const description = github.context.payload.pull_request.body.toLowerCase();
 
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-
-            const labelMappings = {
-             'feature': 'red',
-              'bug fix': 'red',
-              'documentation': 'red',
-              'other': 'red',
-              'javascript': 'green',
-              'css': 'green',
-            };
-
-            try {
-              for (const labelName in labelMappings) {
-                const existingLabel = await octokit.issues.getLabel({
-                  owner,
-                  repo,
-                  name: labelName,
-                });
-
-                if (existingLabel) {
-                  const newColor = labelMappings[labelName];
-
-                  await octokit.issues.updateLabel({
-                    owner,
-                    repo,
-                    current_name: labelName,
-                    name: labelName,
-                    color: newColor,
-                    description: existingLabel.data.description,
-                  });
-
-                  console.log(`Label '${labelName}' color updated to #${newColor}`);
-                } else {
-                  console.warn(`Label '${labelName}' not found. Skipping color update.`);
-                }
-              }
-            } catch (error) {
-              console.error(`Error updating label colors: ${error.message}`);
-              process.exit(1);
+            if (description.includes('bug')) {
+              github.issues.addLabels({
+                issue_number: github.context.payload.pull_request.number,
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                labels: ['bug']
+              });
             }
+
+            // You can add more conditions and labels as needed
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
