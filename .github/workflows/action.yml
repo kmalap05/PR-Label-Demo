@@ -18,4 +18,4 @@ jobs:
         uses: Videndum/release-mastermind@0.0.0-alpha.7
         with:
           GITHUB_TOKEN: "${{ github.token }}"
-          config: .github/config.json
+          config: .github/allconfigs.json
