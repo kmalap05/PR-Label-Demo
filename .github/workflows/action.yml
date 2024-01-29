@@ -32,13 +32,13 @@ jobs:
             echo "Labeling pull request with 'label1'"
             curl -s -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Accept: application/vnd.github+json" \
-              -d '{"labels": ["label1"], "color": "ff0000"}' \
+              -d '{"labels": ["label1"], "color": "#ff0000"}' \
               "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels"
           elif [[ $PR_DESCRIPTION == *"keyword2"* ]]; then
             echo "Labeling pull request with 'label2'"
             curl -s -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               -H "Accept: application/vnd.github+json" \
-              -d '{"labels": ["label2"], "color": "ff0000"}' \
+              -d '{"labels": ["label2"], "color": "#ff0000"}' \
               "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/labels"
           else
             echo "No matching keyword found, no label applied."
