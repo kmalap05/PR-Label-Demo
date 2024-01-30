@@ -20,7 +20,7 @@ jobs:
           node-version: 20
 
       - name: Install git-label
-        run: npm install -g git-label
+        run: npm install
 
       - name: Add labels to pull request
         run: git-label add -c .github/labels.json
