@@ -19,27 +19,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install git-label
+        run: npm install -g git-label
 
-      - name: Label Pull Request
-        run: |
-          PR_DESCRIPTION=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}" \
-            | jq -r '.body')
-
-          if [[ $PR_DESCRIPTION == *"keyword1"* ]]; then
-            echo "Labeling pull request with 'label1'"
-            curl -s -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Accept: application/vnd.github+json" \
-              -d '{"labels": ["label1"], "color": "#ff0000"}' \
-              "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/labels"
-          elif [[ $PR_DESCRIPTION == *"keyword2"* ]]; then
-            echo "Labeling pull request with 'label2'"
-            curl -s -X POST -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Accept: application/vnd.github+json" \
-              -d '{"labels": ["label2"], "color": "#ff0000"}' \
-              "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/labels"
-          else
-            echo "No matching keyword found, no label applied."
-          fi
+      - name: Add labels to pull request
+        run: git-label add -c .github/labels.json
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
