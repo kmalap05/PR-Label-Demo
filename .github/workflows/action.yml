@@ -22,7 +22,8 @@ jobs:
       - name: Install git-label
         run: npm install
 
-      - name: Add labels to pull request
-        run: git-label add -c .github/labels.json
+      - name: Run Label Script
+        run: node .github/label-script.js
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          REPO_FULLNAME: ${{ github.repository }}
