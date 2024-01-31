@@ -103,7 +103,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": ".*js.*"
+          "glob": "\\.js$"
         }
       ]
     },
@@ -112,7 +112,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": ".*css.*"
+          "glob": "\\.css$"
         }
       ]
     },
@@ -121,7 +121,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": ".*yml.*"
+          "glob": "\\.yml$"
         }
       ]
     }
