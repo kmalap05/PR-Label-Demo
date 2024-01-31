@@ -43,20 +43,20 @@
   },
   "issue": {
     "feature": {
-      "requires": 2,
+      "requires": 1,
       "conditions": [
         {
           "type": "titleMatches",
-          "pattern": ".*FEATURE.*"
+          "pattern": "^FEATURE"
         }
       ]
     },
     "bug": {
-      "requires": 2,
+      "requires": 1,
       "conditions": [
         {
           "type": "titleMatches",
-          "pattern": ".*BUG.*"
+          "pattern": "^BUG"
         }
       ]
     }
