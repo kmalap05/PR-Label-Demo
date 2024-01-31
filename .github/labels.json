@@ -46,8 +46,8 @@
       "requires": 2,
       "conditions": [
         {
-          "type": "descriptionMatches",
-          "pattern": ".*Have you searched for a potential feature for this project?.*"
+          "type": "titleMatches",
+          "pattern": ".*FEATURE.*"
         },
         {
           "type": "isOpen"
@@ -58,8 +58,8 @@
       "requires": 2,
       "conditions": [
         {
-          "type": "descriptionMatches",
-          "pattern": ".*Have you searched for a potential bug for this project?.*"
+          "type": "titleMatches",
+          "pattern": ".*BUG.*"
         },
         {
           "type": "isOpen"
