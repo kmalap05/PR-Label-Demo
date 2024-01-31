@@ -73,7 +73,7 @@
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "foo.*bar"
+          "pattern": ".*\\[x\\] Feature.*"
         }
       ]
     },
@@ -82,7 +82,7 @@
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "foo.*bar"
+          "pattern": ".*\\[x\\] Bug.*"
         }
       ]
     },
@@ -91,7 +91,7 @@
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "foo.*bar"
+          "pattern": ".*\\[x\\] Documentation.*"
         }
       ]
     },
@@ -100,7 +100,7 @@
       "conditions": [
         {
           "type": "descriptionMatches",
-          "pattern": "foo.*bar"
+          "pattern": ".*\\[x\\] Other.*"
         }
       ]
     },
@@ -109,7 +109,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": "*.js"
+          "glob": "**/*.js"
         }
       ]
     },
@@ -118,7 +118,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": "*.css"
+          "glob": "**/*.css"
         }
       ]
     },
@@ -127,7 +127,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": "*.yml"
+          "glob": "**/*.yml"
         }
       ]
     }
