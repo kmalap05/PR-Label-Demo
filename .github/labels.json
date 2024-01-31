@@ -43,26 +43,20 @@
   },
   "issue": {
     "feature": {
-      "requires": 2,
+      "requires": 1,
       "conditions": [
         {
-          "type": "descriptionMatches",
-          "pattern": ".*Have you searched for a potential feature for this project?.*"
-        },
-        {
-          "type": "isOpen"
+          "type": "titleMatches",
+          "pattern": ".*\\[FEATURE\\].*"
         }
       ]
     },
     "bug": {
-      "requires": 2,
+      "requires": 1,
       "conditions": [
         {
-          "type": "descriptionMatches",
-          "pattern": ".*Have you searched for a potential bug for this project?.*"
-        },
-        {
-          "type": "isOpen"
+          "type": "titleMatches",
+          "pattern": ".*\\[BUG\\].*"
         }
       ]
     }
@@ -109,7 +103,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": "*.js"
+          "glob": ".*js.*"
         }
       ]
     },
@@ -118,7 +112,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": "*.css"
+          "glob": ".*css.*"
         }
       ]
     },
@@ -127,7 +121,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": "*.yml"
+          "glob": ".*yml.*"
         }
       ]
     }
