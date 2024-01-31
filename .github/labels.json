@@ -1,18 +1,65 @@
 {
   "labels": {
-    "bugfix": {
-      "name": "Bugfix! 🎉",
+    "feature": {
+      "name": "Feature 🌟",
       "colour": "ff0000",
-      "description": "Fixes a bug."
+      "description": "Introduces a new functionality or enhancement."
+    },
+    "bug": {
+      "name": "Bug 🐞",
+      "colour": "ff0000",
+      "description": "Addresses and resolves an existing issue or bug in the codebase."
+    },
+    "bug-fix": {
+      "name": "Bugfix 🔧",
+      "colour": "ff0000",
+      "description": "Addresses and resolves an existing bug or issue."
+    },
+    "documentation": {
+      "name": "Documentation 📝",
+      "colour": "ff0000",
+      "description": "Updates or improves documentation, including comments and README files."
+    },
+    "other": {
+      "name": "Other 🔄",
+      "colour": "ff0000",
+      "description": "Covers changes that do not fall into the specified categories."
+    },
+    "javascript": {
+      "name": "JavaScript 🖥️",
+      "colour": "00ff00",
+      "description": "Incorporates changes related to JavaScript code."
+    },
+    "css": {
+      "name": "CSS 🎨",
+      "colour": "00ff00",
+      "description": "Involves modifications to Cascading Style Sheets (CSS)."
+    },
+    "yml": {
+      "name": "YAML 🔍",
+      "colour": "00ff00",
+      "description": "Encompasses alterations to YAML configuration files."
     }
   },
   "issue": {
-    "example": {
+    "feature": {
       "requires": 2,
       "conditions": [
         {
-          "type": "titleMatches",
-          "pattern": "example"
+          "type": "descriptionMatches",
+          "pattern": ".*Have you searched for a potential feature for this project?.*"
+        },
+        {
+          "type": "isOpen"
+        }
+      ]
+    },
+    "bug": {
+      "requires": 2,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": ".*Have you searched for a potential bug for this project?.*"
         },
         {
           "type": "isOpen"
@@ -21,12 +68,66 @@
     }
   },
   "pr": {
-    "bugfix": {
+    "feature": {
       "requires": 1,
       "conditions": [
         {
-          "type": "branchMatches",
-          "pattern": "^bugfix"
+          "type": "descriptionMatches",
+          "pattern": "foo.*bar"
+        }
+      ]
+    },
+    "bug-fix": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": "foo.*bar"
+        }
+      ]
+    },
+    "documentation": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": "foo.*bar"
+        }
+      ]
+    },
+    "other": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": "foo.*bar"
+        }
+      ]
+    },
+    "javascript": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "filesMatch",
+          "glob": "*.js"
+        }
+      ]
+    },
+    "css": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "filesMatch",
+          "glob": "*.css"
+        }
+      ]
+    },
+    "yml": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "filesMatch",
+          "glob": "*.yml"
         }
       ]
     }
