@@ -1,4 +1,34 @@
 {
-  "demo": "d73a4a",
-  "demo123": "a2eeef"
+  "labels": {
+    "bugfix": {
+      "name": "Bugfix! 🎉",
+      "colour": "ff0000",
+      "description": "Fixes a bug."
+    }
+  },
+  "issue": {
+    "example": {
+      "requires": 2,
+      "conditions": [
+        {
+          "type": "titleMatches",
+          "pattern": "example"
+        },
+        {
+          "type": "isOpen"
+        }
+      ]
+    }
+  },
+  "pr": {
+    "bugfix": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "branchMatches",
+          "pattern": "^bugfix"
+        }
+      ]
+    }
+  }
 }
