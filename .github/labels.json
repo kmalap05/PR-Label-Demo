@@ -59,6 +59,33 @@
           "pattern": ".*\\[BUG\\].*"
         }
       ]
+    },
+    "javascript": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": ".*js.*"
+        }
+      ]
+    },
+    "css": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": ".*css.*"
+        }
+      ]
+    },
+    "yml": {
+      "requires": 1,
+      "conditions": [
+        {
+          "type": "descriptionMatches",
+          "pattern": ".*yml.*"
+        }
+      ]
     }
   },
   "pr": {
@@ -103,7 +130,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": ".*js.*"
+          "glob": "*.js"
         }
       ]
     },
@@ -112,7 +139,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": ".*css.*"
+          "glob": "*.css"
         }
       ]
     },
@@ -121,7 +148,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": ".*yml.*"
+          "glob": "*.yml"
         }
       ]
     }
