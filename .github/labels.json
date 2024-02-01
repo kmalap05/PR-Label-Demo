@@ -130,7 +130,7 @@
       "conditions": [
         {
           "type": "filesMatch",
-          "glob": "**/*.js"
+          "glob": ["**/*.js"]
         }
       ]
     },
