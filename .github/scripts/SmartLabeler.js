@@ -1,6 +1,6 @@
 const { context, getOctokit } = require("@actions/github");
 
-async function applyLabels(octokit, owner, repo, pullNumber, labels) {
+async function applyLabels(octokit, owner, repo, number, labels) {
   for (const label of labels) {
     try {
       const existingLabel = await octokit.rest.issues.getLabel({
@@ -13,7 +13,7 @@ async function applyLabels(octokit, owner, repo, pullNumber, labels) {
         await octokit.rest.issues.addLabels({
           owner,
           repo,
-          issue_number: pullNumber,
+          issue_number: number,
           labels: [label.name],
         });
       } else {
@@ -28,7 +28,7 @@ async function applyLabels(octokit, owner, repo, pullNumber, labels) {
         await octokit.rest.issues.addLabels({
           owner,
           repo,
-          issue_number: pullNumber,
+          issue_number: number,
           labels: [label.name],
         });
       }
@@ -44,7 +44,7 @@ async function applyLabels(octokit, owner, repo, pullNumber, labels) {
         await octokit.rest.issues.addLabels({
           owner,
           repo,
-          issue_number: pullNumber,
+          issue_number: number,
           labels: [label.name],
         });
       } else {
