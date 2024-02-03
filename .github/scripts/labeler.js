@@ -18,7 +18,8 @@ async function main() {
   const octokit = getOctokit(token);
 
   const { owner, repo, number: pull_number } = context.issue;
-  const pr = await octokit.rest.pulls.get({ owner, repo, pull_number });
+
+  console.log(owner, repo, pull_number);
 
   // Add your labeling rules here
   const changedFiles = await octokit.rest.pulls.listFiles({
