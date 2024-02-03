@@ -10,8 +10,7 @@ async function labelExists(octokit, owner, repo, labelName, labelColor) {
 
     // Check if existingLabel is defined before accessing its properties
     return (
-      existingLabel &&
-      existingLabel.color.toLowerCase() === labelColor.toLowerCase()
+      existingLabel && existingLabel.color && existingLabel.color === labelColor
     );
   } catch (error) {
     if (error.status === 404) {
