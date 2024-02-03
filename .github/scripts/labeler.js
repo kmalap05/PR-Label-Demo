@@ -1,5 +1,6 @@
 const { context, getOctokit } = require("@actions/github");
 
+// Move the labelExists function declaration to the top
 async function labelExists(octokit, owner, repo, labelName) {
   try {
     await octokit.rest.issues.getLabel({
@@ -19,10 +20,9 @@ async function labelExists(octokit, owner, repo, labelName) {
 
 async function applyLabels(octokit, owner, repo, pull_number, labels) {
   for (const label of labels) {
-    const labelExists = await labelExists(octokit, owner, repo, label.name);
+    const exists = await labelExists(octokit, owner, repo, label.name);
 
-    if (!labelExists) {
-      // Label doesn't exist, create it
+    if (!exists) {
       await octokit.rest.issues.createLabel({
         owner,
         repo,
@@ -31,7 +31,6 @@ async function applyLabels(octokit, owner, repo, pull_number, labels) {
       });
     }
 
-    // Add the label to the issue
     await octokit.rest.issues.addLabels({
       owner,
       repo,
@@ -53,7 +52,6 @@ async function main() {
 
   console.log(owner, repo, pull_number);
 
-  // Add your labeling rules here
   const changedFiles = await octokit.rest.pulls.listFiles({
     owner,
     repo,
@@ -64,13 +62,11 @@ async function main() {
 
   for (const file of changedFiles.data) {
     if (file.filename.endsWith(".js")) {
-      // Add the label with color information
       labelsToApply.push({
         name: "javascript-file",
-        color: "ffcc00", // Replace with the desired color code
+        color: "ffcc00",
       });
     }
-    // Add more conditions as needed
   }
 
   if (labelsToApply.length > 0) {
