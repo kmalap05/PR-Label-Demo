@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run labeler script
-        run: node .github/scripts/labeler.js
+      - name: Labeler based on files
+        run: node .github/scripts/AutoFileLabeler.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
