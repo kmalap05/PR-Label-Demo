@@ -67,7 +67,7 @@ async function main() {
   const { number, action } = context.issue;
 
   console.log(
-    `Repository: ${owner}/${repo}, Number: ${number}, Action: ${action} \n ${context.payload}`
+    `Repository: ${owner}/${repo}, Number: ${number}, Action: ${action} \n ${context.payload.issue}`
   );
 
   if (action === "opened") {
