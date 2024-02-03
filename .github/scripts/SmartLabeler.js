@@ -1,6 +1,8 @@
 const { context, getOctokit } = require("@actions/github");
 
 async function applyLabels(octokit, owner, repo, number, labels) {
+  console.log(octokit, owner, repo, number, labels);
+
   for (const label of labels) {
     try {
       const existingLabel = await octokit.rest.issues.getLabel({
@@ -65,7 +67,7 @@ async function main() {
   const { number, action } = context.issue;
 
   console.log(
-    `Repository: ${owner}/${repo}, Number: ${number}, Action: ${action}`
+    `Repository: ${owner}/${repo}, Number: ${number}, Action: ${action} \n ${context.payload}`
   );
 
   if (action === "opened") {
