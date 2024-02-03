@@ -76,7 +76,17 @@ async function main() {
   for (const file of changedFiles.data) {
     if (file.filename.endsWith(".js")) {
       fileLabelsToApply.push({
-        name: "javascript-file",
+        name: "JavaScript 🖥️",
+        color: "00ff00",
+      });
+    } else if (file.filename.endsWith(".css")) {
+      fileLabelsToApply.push({
+        name: "CSS 🎨",
+        color: "00ff00",
+      });
+    } else if (file.filename.endsWith(".yml")) {
+      fileLabelsToApply.push({
+        name: "YAML 🔍",
         color: "00ff00",
       });
     }
@@ -105,27 +115,30 @@ async function main() {
 
   if (description.includes("[x] Feature")) {
     descriptionLabelsToApply.push({
-      name: "Feature",
-      color: "YourFeatureColor",
+      name: "Feature 🌟",
+      color: "ff0000",
     });
   }
 
   if (description.includes("[x] Bug Fix")) {
     descriptionLabelsToApply.push({
-      name: "Bug Fix",
-      color: "YourBugFixColor",
+      name: "Bugfix! 🎉",
+      color: "ff0000",
     });
   }
 
   if (description.includes("[x] Documentation")) {
     descriptionLabelsToApply.push({
-      name: "Documentation",
-      color: "YourDocumentationColor",
+      name: "Documentation 📝",
+      color: "ff0000",
     });
   }
 
   if (description.includes("[x] Other")) {
-    descriptionLabelsToApply.push({ name: "Other", color: "YourOtherColor" });
+    descriptionLabelsToApply.push({
+      name: "Other 🔄",
+      color: "ff0000",
+    });
   }
 
   if (descriptionLabelsToApply.length > 0) {
