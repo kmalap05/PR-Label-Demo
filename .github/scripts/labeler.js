@@ -1,27 +1,18 @@
 const { context, getOctokit } = require("@actions/github");
 
-// Move the labelExists function declaration to the top
-// async function labelExists(octokit, owner, repo, labelName) {
-//   try {
-//     await octokit.rest.issues.getLabel({
-//       owner,
-//       repo,
-//       name: labelName,
-//     });
-//     return true; // Label exists
-//   } catch (error) {
-//     if (error.status === 404) {
-//       return false; // Label does not exist
-//     } else {
-//       throw error; // Other errors
-//     }
-//   }
-// }
-
-async function applyLabels(octokit, owner, repo, pull_number, labels) {
+/**
+ * Apply labels to a pull request based on specified conditions.
+ *
+ * @param {Object} octokit - Octokit instance
+ * @param {string} owner - Owner of the repository
+ * @param {string} repo - Repository name
+ * @param {number} pullNumber - Pull request number
+ * @param {Array} labels - Array of labels to apply
+ */
+async function applyLabels(octokit, owner, repo, pullNumber, labels) {
   for (const label of labels) {
     try {
-      // Check if label exists
+      // Check if the label already exists
       const existingLabel = await octokit.rest.issues.getLabel({
         owner,
         repo,
@@ -33,7 +24,7 @@ async function applyLabels(octokit, owner, repo, pull_number, labels) {
         await octokit.rest.issues.addLabels({
           owner,
           repo,
-          issue_number: pull_number,
+          issue_number: pullNumber,
           labels: [label.name],
         });
       } else {
@@ -49,7 +40,7 @@ async function applyLabels(octokit, owner, repo, pull_number, labels) {
         await octokit.rest.issues.addLabels({
           owner,
           repo,
-          issue_number: pull_number,
+          issue_number: pullNumber,
           labels: [label.name],
         });
       }
@@ -66,7 +57,7 @@ async function applyLabels(octokit, owner, repo, pull_number, labels) {
         await octokit.rest.issues.addLabels({
           owner,
           repo,
-          issue_number: pull_number,
+          issue_number: pullNumber,
           labels: [label.name],
         });
       } else {
@@ -76,6 +67,9 @@ async function applyLabels(octokit, owner, repo, pull_number, labels) {
   }
 }
 
+/**
+ * Main function to apply labels based on changed files in a pull request.
+ */
 async function main() {
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
@@ -83,15 +77,14 @@ async function main() {
   }
 
   const octokit = getOctokit(token);
+  const { owner, repo, number: pullNumber } = context.issue;
 
-  const { owner, repo, number: pull_number } = context.issue;
-
-  console.log(owner, repo, pull_number);
+  console.log(`Repository: ${owner}/${repo}, Pull Request: ${pullNumber}`);
 
   const changedFiles = await octokit.rest.pulls.listFiles({
     owner,
     repo,
-    pull_number,
+    pull_number: pullNumber,
   });
 
   const labelsToApply = [];
@@ -106,7 +99,7 @@ async function main() {
   }
 
   if (labelsToApply.length > 0) {
-    await applyLabels(octokit, owner, repo, pull_number, labelsToApply);
+    await applyLabels(octokit, owner, repo, pullNumber, labelsToApply);
     console.log(
       `Labels applied: ${labelsToApply.map((label) => label.name).join(", ")}`
     );
