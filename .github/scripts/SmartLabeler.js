@@ -1,7 +1,7 @@
 const { context, getOctokit } = require("@actions/github");
 
 async function applyLabels(octokit, owner, repo, number, labels) {
-  console.log(octokit, owner, repo, number, labels);
+  console.log("Applying labels:", octokit, owner, repo, number, labels);
 
   for (const label of labels) {
     try {
@@ -18,6 +18,7 @@ async function applyLabels(octokit, owner, repo, number, labels) {
           issue_number: number,
           labels: [label.name],
         });
+        console.log(`Label '${label.name}' added.`);
       } else {
         await octokit.rest.issues.updateLabel({
           owner,
@@ -33,6 +34,7 @@ async function applyLabels(octokit, owner, repo, number, labels) {
           issue_number: number,
           labels: [label.name],
         });
+        console.log(`Label '${label.name}' updated and added.`);
       }
     } catch (error) {
       if (error.status === 404) {
@@ -49,6 +51,7 @@ async function applyLabels(octokit, owner, repo, number, labels) {
           issue_number: number,
           labels: [label.name],
         });
+        console.log(`Label '${label.name}' created and added.`);
       } else {
         throw error;
       }
@@ -66,8 +69,6 @@ async function main() {
   const { owner, repo } = context.repo;
   const { number, action } = context.issue;
 
-  console.log(`${context.issue}`);
-
   console.log(
     `Repository: ${owner}/${repo}, Number: ${number}, Action: ${action}`
   );
@@ -76,6 +77,7 @@ async function main() {
     if (context.payload.pull_request) {
       // It's a new pull request
       const pullNumber = context.payload.pull_request.number;
+      console.log(`Processing pull request #${pullNumber}`);
 
       // Label based on changed files
       const changedFiles = await octokit.rest.pulls.listFiles({
@@ -173,6 +175,7 @@ async function main() {
       // Label based on issue title and description
       if (context.payload.issue) {
         const issueNumber = context.payload.issue.number;
+        console.log(`Processing issue #${issueNumber}`);
 
         const issue = await octokit.rest.issues.get({
           owner,
