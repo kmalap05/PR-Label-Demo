@@ -61,12 +61,18 @@ async function main() {
   }
 
   const octokit = getOctokit(token);
-  const { owner, repo, number: pullNumber } = context.issue;
+  const { owner, repo } = context.repo;
+  const { number, action } = context.issue;
 
-  console.log(`Repository: ${owner}/${repo}, Pull Request: ${pullNumber}`);
+  console.log(
+    `Repository: ${owner}/${repo}, Number: ${number}, Action: ${action}`
+  );
 
   if (action === "opened") {
     if (context.payload.pull_request) {
+      // It's a new pull request
+      const pullNumber = context.payload.pull_request.number;
+
       // Label based on changed files
       const changedFiles = await octokit.rest.pulls.listFiles({
         owner,
@@ -163,6 +169,7 @@ async function main() {
       // Label based on issue title and description
       if (context.payload.issue) {
         const issueNumber = context.payload.issue.number;
+
         const issue = await octokit.rest.issues.get({
           owner,
           repo,
@@ -174,32 +181,32 @@ async function main() {
         const issueDescriptionLabelsToApply = [];
 
         if (issue.data.title.includes("[BUG]")) {
-          titleLabelsToApply.push({ name: "Bug", color: "YourBugColor" });
+          titleLabelsToApply.push({ name: "Bug 🐞", color: "ff0000" });
         } else if (issue.data.title.includes("[FEATURE]")) {
           titleLabelsToApply.push({
-            name: "Feature",
-            color: "YourFeatureColor",
+            name: "Feature 🌟",
+            color: "ff0000",
           });
         }
 
         if (issue.data.body.includes(".js")) {
           issueDescriptionLabelsToApply.push({
-            name: "JavaScript",
-            color: "YourJavaScriptColor",
+            name: "JavaScript 🖥️",
+            color: "00ff00",
           });
         }
 
         if (issue.data.body.includes(".css")) {
           issueDescriptionLabelsToApply.push({
-            name: "CSS",
-            color: "YourCSSColor",
+            name: "CSS 🎨",
+            color: "00ff00",
           });
         }
 
         if (issue.data.body.includes(".yml")) {
           issueDescriptionLabelsToApply.push({
-            name: "YAML",
-            color: "YourYAMLColor",
+            name: "YAML 🔍",
+            color: "00ff00",
           });
         }
 
