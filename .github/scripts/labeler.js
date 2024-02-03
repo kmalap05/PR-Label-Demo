@@ -100,7 +100,7 @@ async function main() {
     if (file.filename.endsWith(".js")) {
       labelsToApply.push({
         name: "javascript-file",
-        color: "ffcc00",
+        color: "00ff00",
       });
     }
   }
