@@ -1,4 +1,4 @@
-name: Pull Request Labeler
+name: Smart Labeler
 
 on:
   issues:
@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Labeler based on files
+      - name: Smart Labeler
         run: node .github/scripts/SmartLabeler.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

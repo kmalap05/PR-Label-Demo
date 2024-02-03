@@ -1,8 +1,14 @@
 const { context, getOctokit } = require("@actions/github");
 
+/**
+ * Apply labels to an issue or pull request.
+ * @param {object} octokit - The Octokit instance.
+ * @param {string} owner - The repository owner.
+ * @param {string} repo - The repository name.
+ * @param {number} number - The issue or pull request number.
+ * @param {Array} labels - Array of label objects to be applied.
+ */
 async function applyLabels(octokit, owner, repo, number, labels) {
-  console.log("Applying labels:", octokit, owner, repo, number, labels);
-
   for (const label of labels) {
     try {
       const existingLabel = await octokit.rest.issues.getLabel({
@@ -12,14 +18,15 @@ async function applyLabels(octokit, owner, repo, number, labels) {
       });
 
       if (existingLabel.color === label.color) {
+        // Label exists with the same color
         await octokit.rest.issues.addLabels({
           owner,
           repo,
           issue_number: number,
           labels: [label.name],
         });
-        console.log(`Label '${label.name}' added.`);
       } else {
+        // Label exists but with a different color
         await octokit.rest.issues.updateLabel({
           owner,
           repo,
@@ -28,16 +35,17 @@ async function applyLabels(octokit, owner, repo, number, labels) {
           color: label.color,
         });
 
+        // Add the label after updating
         await octokit.rest.issues.addLabels({
           owner,
           repo,
           issue_number: number,
           labels: [label.name],
         });
-        console.log(`Label '${label.name}' updated and added.`);
       }
     } catch (error) {
       if (error.status === 404) {
+        // Label does not exist, create it and add
         await octokit.rest.issues.createLabel({
           owner,
           repo,
@@ -45,13 +53,13 @@ async function applyLabels(octokit, owner, repo, number, labels) {
           color: label.color,
         });
 
+        // Add the label after creating
         await octokit.rest.issues.addLabels({
           owner,
           repo,
           issue_number: number,
           labels: [label.name],
         });
-        console.log(`Label '${label.name}' created and added.`);
       } else {
         throw error;
       }
@@ -59,25 +67,31 @@ async function applyLabels(octokit, owner, repo, number, labels) {
   }
 }
 
+/**
+ * Main function to process the event.
+ */
 async function main() {
+  // Get GitHub token from environment variable
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
     throw new Error("GITHUB_TOKEN not set.");
   }
 
+  // Create Octokit instance
   const octokit = getOctokit(token);
   const { owner, repo } = context.repo;
   const { number, action } = context.payload;
 
+  // Log basic information
   console.log(
     `Repository: ${owner}/${repo}, Number: ${number}, Action: ${action}`
   );
 
+  // Check if the event is an 'opened' action
   if (action === "opened") {
+    // Check if it's a pull request
     if (context.payload.pull_request) {
-      // It's a new pull request
       const pullNumber = context.payload.pull_request.number;
-      console.log(`Processing pull request #${pullNumber}`);
 
       // Label based on changed files
       const changedFiles = await octokit.rest.pulls.listFiles({
@@ -106,15 +120,9 @@ async function main() {
         }
       }
 
+      // Apply file labels if any
       if (fileLabelsToApply.length > 0) {
         await applyLabels(octokit, owner, repo, pullNumber, fileLabelsToApply);
-        console.log(
-          `File Labels applied: ${fileLabelsToApply
-            .map((label) => label.name)
-            .join(", ")}`
-        );
-      } else {
-        console.log("No file labels to apply.");
       }
 
       // Label based on pull request description
@@ -127,6 +135,7 @@ async function main() {
       const description = pullRequest.data.body || "";
       const pullRequestDescriptionLabelsToApply = [];
 
+      // Check for specific keywords in description
       if (description.includes("[x] Feature")) {
         pullRequestDescriptionLabelsToApply.push({
           name: "Feature 🌟",
@@ -155,6 +164,7 @@ async function main() {
         });
       }
 
+      // Apply description labels if any
       if (pullRequestDescriptionLabelsToApply.length > 0) {
         await applyLabels(
           octokit,
@@ -163,98 +173,71 @@ async function main() {
           pullNumber,
           pullRequestDescriptionLabelsToApply
         );
-        console.log(
-          `Description Labels applied: ${pullRequestDescriptionLabelsToApply
-            .map((label) => label.name)
-            .join(", ")}`
-        );
-      } else {
-        console.log("No description labels to apply.");
       }
     } else if (context.payload.issue) {
-      // Label based on issue title and description
-      if (context.payload.issue) {
-        const issueNumber = context.payload.issue.number;
-        console.log(`Processing issue #${issueNumber}`);
+      // It's a new issue
+      const issueNumber = context.payload.issue.number;
 
-        const issue = await octokit.rest.issues.get({
+      // Extract labels from the issue title and description
+      const titleLabelsToApply = [];
+      const issueDescriptionLabelsToApply = [];
+
+      if (context.payload.issue.title.includes("[BUG]")) {
+        titleLabelsToApply.push({ name: "Bug 🐞", color: "ff0000" });
+      } else if (context.payload.issue.title.includes("[FEATURE]")) {
+        titleLabelsToApply.push({
+          name: "Feature 🌟",
+          color: "ff0000",
+        });
+      }
+
+      if (context.payload.issue.body.includes(".js")) {
+        issueDescriptionLabelsToApply.push({
+          name: "JavaScript 🖥️",
+          color: "00ff00",
+        });
+      }
+
+      if (context.payload.issue.body.includes(".css")) {
+        issueDescriptionLabelsToApply.push({
+          name: "CSS 🎨",
+          color: "00ff00",
+        });
+      }
+
+      if (context.payload.issue.body.includes(".yml")) {
+        issueDescriptionLabelsToApply.push({
+          name: "YAML 🔍",
+          color: "00ff00",
+        });
+      }
+
+      // Apply title labels if any
+      if (titleLabelsToApply.length > 0) {
+        await applyLabels(
+          octokit,
           owner,
           repo,
-          issue_number: issueNumber,
-        });
+          issueNumber,
+          titleLabelsToApply
+        );
+      }
 
-        // Extract labels from the issue title and description
-        const titleLabelsToApply = [];
-        const issueDescriptionLabelsToApply = [];
-
-        if (issue.data.title.includes("[BUG]")) {
-          titleLabelsToApply.push({ name: "Bug 🐞", color: "ff0000" });
-        } else if (issue.data.title.includes("[FEATURE]")) {
-          titleLabelsToApply.push({
-            name: "Feature 🌟",
-            color: "ff0000",
-          });
-        }
-
-        if (issue.data.body.includes(".js")) {
-          issueDescriptionLabelsToApply.push({
-            name: "JavaScript 🖥️",
-            color: "00ff00",
-          });
-        }
-
-        if (issue.data.body.includes(".css")) {
-          issueDescriptionLabelsToApply.push({
-            name: "CSS 🎨",
-            color: "00ff00",
-          });
-        }
-
-        if (issue.data.body.includes(".yml")) {
-          issueDescriptionLabelsToApply.push({
-            name: "YAML 🔍",
-            color: "00ff00",
-          });
-        }
-
-        if (titleLabelsToApply.length > 0) {
-          await applyLabels(
-            octokit,
-            owner,
-            repo,
-            issueNumber,
-            titleLabelsToApply
-          );
-          console.log(
-            `Title Labels applied: ${titleLabelsToApply
-              .map((label) => label.name)
-              .join(", ")}`
-          );
-        } else {
-          console.log("No title labels to apply.");
-        }
-
-        if (issueDescriptionLabelsToApply.length > 0) {
-          await applyLabels(
-            octokit,
-            owner,
-            repo,
-            issueNumber,
-            issueDescriptionLabelsToApply
-          );
-          console.log(
-            `Description Labels applied: ${issueDescriptionLabelsToApply
-              .map((label) => label.name)
-              .join(", ")}`
-          );
-        } else {
-          console.log("No description labels to apply.");
-        }
+      // Apply description labels if any
+      if (issueDescriptionLabelsToApply.length > 0) {
+        await applyLabels(
+          octokit,
+          owner,
+          repo,
+          issueNumber,
+          issueDescriptionLabelsToApply
+        );
       }
     }
   }
 }
 
+// Execute the main function
 main().catch((error) => {
   console.error(error.message);
   process.exit(1);
