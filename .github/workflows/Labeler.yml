@@ -23,6 +23,6 @@ jobs:
         run: npm install
 
       - name: Labeler based on files
-        run: node .github/scripts/AutoFileLabeler.js
+        run: node .github/scripts/SmartLabeler.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
