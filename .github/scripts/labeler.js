@@ -1,53 +1,78 @@
 const { context, getOctokit } = require("@actions/github");
 
-async function labelExists(octokit, owner, repo, labelName, labelColor) {
-  try {
-    const existingLabel = await octokit.rest.issues.getLabel({
-      owner,
-      repo,
-      name: labelName,
-    });
-
-    // Check if existingLabel is defined before accessing its properties
-    return (
-      existingLabel && existingLabel.color && existingLabel.color === labelColor
-    );
-  } catch (error) {
-    if (error.status === 404) {
-      return false; // Label does not exist
-    } else {
-      throw error; // Other errors
-    }
-  }
-}
+// Move the labelExists function declaration to the top
+// async function labelExists(octokit, owner, repo, labelName) {
+//   try {
+//     await octokit.rest.issues.getLabel({
+//       owner,
+//       repo,
+//       name: labelName,
+//     });
+//     return true; // Label exists
+//   } catch (error) {
+//     if (error.status === 404) {
+//       return false; // Label does not exist
+//     } else {
+//       throw error; // Other errors
+//     }
+//   }
+// }
 
 async function applyLabels(octokit, owner, repo, pull_number, labels) {
   for (const label of labels) {
-    const exists = await labelExists(
-      octokit,
-      owner,
-      repo,
-      label.name,
-      label.color
-    );
-
-    if (!exists) {
-      // Label with the same name doesn't exist or has a different color, update or create it
-      await octokit.rest.issues.createLabel({
+    try {
+      // Check if label exists
+      const existingLabel = await octokit.rest.issues.getLabel({
         owner,
         repo,
         name: label.name,
-        color: label.color,
       });
-    }
 
-    // Add the label to the issue
-    await octokit.rest.issues.addLabels({
-      owner,
-      repo,
-      issue_number: pull_number,
-      labels: [label.name],
-    });
+      // If label exists with the same name and same color, just add it
+      if (existingLabel.color === label.color) {
+        await octokit.rest.issues.addLabels({
+          owner,
+          repo,
+          issue_number: pull_number,
+          labels: [label.name],
+        });
+      } else {
+        // If label exists with the same name but different color, update it and add
+        await octokit.rest.issues.updateLabel({
+          owner,
+          repo,
+          current_name: label.name,
+          name: label.name,
+          color: label.color,
+        });
+
+        await octokit.rest.issues.addLabels({
+          owner,
+          repo,
+          issue_number: pull_number,
+          labels: [label.name],
+        });
+      }
+    } catch (error) {
+      // If label does not exist, create it and add
+      if (error.status === 404) {
+        await octokit.rest.issues.createLabel({
+          owner,
+          repo,
+          name: label.name,
+          color: label.color,
+        });
+
+        await octokit.rest.issues.addLabels({
+          owner,
+          repo,
+          issue_number: pull_number,
+          labels: [label.name],
+        });
+      } else {
+        throw error; // Other errors
+      }
+    }
   }
 }
 
@@ -73,15 +98,11 @@ async function main() {
 
   for (const file of changedFiles.data) {
     if (file.filename.endsWith(".js")) {
-      // Change the color of the label as needed
-      const labelColor = "00ff00";
-
       labelsToApply.push({
         name: "javascript-file",
-        color: labelColor,
+        color: "ffcc00",
       });
     }
-    // Add more conditions as needed
   }
 
   if (labelsToApply.length > 0) {
