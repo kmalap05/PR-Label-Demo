@@ -111,51 +111,120 @@ async function main() {
   });
 
   const description = pullRequest.data.body || "";
-  const descriptionLabelsToApply = [];
+  const pullRequestDescriptionLabelsToApply = [];
 
   if (description.includes("[x] Feature")) {
-    descriptionLabelsToApply.push({
+    pullRequestDescriptionLabelsToApply.push({
       name: "Feature 🌟",
       color: "ff0000",
     });
   }
 
   if (description.includes("[x] Bug Fix")) {
-    descriptionLabelsToApply.push({
+    pullRequestDescriptionLabelsToApply.push({
       name: "Bugfix! 🎉",
       color: "ff0000",
     });
   }
 
   if (description.includes("[x] Documentation")) {
-    descriptionLabelsToApply.push({
+    pullRequestDescriptionLabelsToApply.push({
       name: "Documentation 📝",
       color: "ff0000",
     });
   }
 
   if (description.includes("[x] Other")) {
-    descriptionLabelsToApply.push({
+    pullRequestDescriptionLabelsToApply.push({
       name: "Other 🔄",
       color: "ff0000",
     });
   }
 
-  if (descriptionLabelsToApply.length > 0) {
+  if (pullRequestDescriptionLabelsToApply.length > 0) {
     await applyLabels(
       octokit,
       owner,
       repo,
       pullNumber,
-      descriptionLabelsToApply
+      pullRequestDescriptionLabelsToApply
     );
     console.log(
-      `Description Labels applied: ${descriptionLabelsToApply
+      `Description Labels applied: ${pullRequestDescriptionLabelsToApply
         .map((label) => label.name)
         .join(", ")}`
     );
   } else {
     console.log("No description labels to apply.");
+  }
+
+  // Label based on issue title and description
+  if (context.payload.issue) {
+    const issueNumber = context.payload.issue.number;
+    const issue = await octokit.rest.issues.get({
+      owner,
+      repo,
+      issue_number: issueNumber,
+    });
+
+    // Extract labels from the issue title and description
+    const titleLabelsToApply = [];
+    const issueDescriptionLabelsToApply = [];
+
+    if (issue.data.title.includes("[BUG]")) {
+      titleLabelsToApply.push({ name: "Bug", color: "YourBugColor" });
+    } else if (issue.data.title.includes("[FEATURE]")) {
+      titleLabelsToApply.push({ name: "Feature", color: "YourFeatureColor" });
+    }
+
+    if (issue.data.body.includes(".js")) {
+      issueDescriptionLabelsToApply.push({
+        name: "JavaScript",
+        color: "YourJavaScriptColor",
+      });
+    }
+
+    if (issue.data.body.includes(".css")) {
+      issueDescriptionLabelsToApply.push({
+        name: "CSS",
+        color: "YourCSSColor",
+      });
+    }
+
+    if (issue.data.body.includes(".yml")) {
+      issueDescriptionLabelsToApply.push({
+        name: "YAML",
+        color: "YourYAMLColor",
+      });
+    }
+
+    if (titleLabelsToApply.length > 0) {
+      await applyLabels(octokit, owner, repo, issueNumber, titleLabelsToApply);
+      console.log(
+        `Title Labels applied: ${titleLabelsToApply
+          .map((label) => label.name)
+          .join(", ")}`
+      );
+    } else {
+      console.log("No title labels to apply.");
+    }
+
+    if (issueDescriptionLabelsToApply.length > 0) {
+      await applyLabels(
+        octokit,
+        owner,
+        repo,
+        issueNumber,
+        issueDescriptionLabelsToApply
+      );
+      console.log(
+        `Description Labels applied: ${issueDescriptionLabelsToApply
+          .map((label) => label.name)
+          .join(", ")}`
+      );
+    } else {
+      console.log("No description labels to apply.");
+    }
   }
 }
 
