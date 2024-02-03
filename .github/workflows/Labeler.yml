@@ -1,10 +1,6 @@
 name: Pull Request Labeler
 
 on:
-  issues:
-    types:
-      - opened
-
   pull_request:
     types:
       - opened
