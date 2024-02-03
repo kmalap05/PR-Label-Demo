@@ -1,12 +1,44 @@
 const { context, getOctokit } = require("@actions/github");
 
+async function labelExists(octokit, owner, repo, labelName) {
+  try {
+    await octokit.rest.issues.getLabel({
+      owner,
+      repo,
+      name: labelName,
+    });
+    return true; // Label exists
+  } catch (error) {
+    if (error.status === 404) {
+      return false; // Label does not exist
+    } else {
+      throw error; // Other errors
+    }
+  }
+}
+
 async function applyLabels(octokit, owner, repo, pull_number, labels) {
-  await octokit.rest.issues.addLabels({
-    owner,
-    repo,
-    issue_number: pull_number,
-    labels,
-  });
+  for (const label of labels) {
+    const labelExists = await labelExists(octokit, owner, repo, label.name);
+
+    if (!labelExists) {
+      // Label doesn't exist, create it
+      await octokit.rest.issues.createLabel({
+        owner,
+        repo,
+        name: label.name,
+        color: label.color,
+      });
+    }
+
+    // Add the label to the issue
+    await octokit.rest.issues.addLabels({
+      owner,
+      repo,
+      issue_number: pull_number,
+      labels: [label.name],
+    });
+  }
 }
 
 async function main() {
@@ -32,14 +64,20 @@ async function main() {
 
   for (const file of changedFiles.data) {
     if (file.filename.endsWith(".js")) {
-      labelsToApply.push("javascript-file");
+      // Add the label with color information
+      labelsToApply.push({
+        name: "javascript-file",
+        color: "ffcc00", // Replace with the desired color code
+      });
     }
     // Add more conditions as needed
   }
 
   if (labelsToApply.length > 0) {
     await applyLabels(octokit, owner, repo, pull_number, labelsToApply);
-    console.log(`Labels applied: ${labelsToApply.join(", ")}`);
+    console.log(
+      `Labels applied: ${labelsToApply.map((label) => label.name).join(", ")}`
+    );
   } else {
     console.log("No labels to apply.");
   }
