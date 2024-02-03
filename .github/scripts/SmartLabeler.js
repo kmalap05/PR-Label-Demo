@@ -186,7 +186,7 @@ async function main() {
         titleLabelsToApply.push({ name: "Bug 🐞", color: "ff0000" });
       } else if (context.payload.issue.title.includes("[FEATURE]")) {
         titleLabelsToApply.push({
-          name: "Feature 🌟",
+          name: "Enhancement ✨",
           color: "ff0000",
         });
       }
