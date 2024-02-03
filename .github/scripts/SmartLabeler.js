@@ -67,7 +67,7 @@ async function main() {
 
   const octokit = getOctokit(token);
   const { owner, repo } = context.repo;
-  const { number, action } = context.issue;
+  const { number, action } = context.payload;
 
   console.log(
     `Repository: ${owner}/${repo}, Number: ${number}, Action: ${action}`
