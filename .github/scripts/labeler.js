@@ -1,23 +1,43 @@
 const { context, getOctokit } = require("@actions/github");
 
+// Move the labelExists function declaration to the top
+async function labelExists(octokit, owner, repo, labelName) {
+  try {
+    await octokit.rest.issues.getLabel({
+      owner,
+      repo,
+      name: labelName,
+    });
+    return true; // Label exists
+  } catch (error) {
+    if (error.status === 404) {
+      return false; // Label does not exist
+    } else {
+      throw error; // Other errors
+    }
+  }
+}
+
 async function applyLabels(octokit, owner, repo, pull_number, labels) {
-  // Fetching the color for each label, you can customize this based on your requirements
-  const labelColors = {
-    "javascript-file": "FFD700", // Example color for the 'javascript-file' label (hex format)
-    // Add more label-color pairs as needed
-  };
+  for (const label of labels) {
+    const exists = await labelExists(octokit, owner, repo, label.name);
 
-  const labelsWithColors = labels.map((label) => ({
-    name: label,
-    color: labelColors[label] || "000000", // Default to black if no color is specified
-  }));
+    if (!exists) {
+      await octokit.rest.issues.createLabel({
+        owner,
+        repo,
+        name: label.name,
+        color: label.color,
+      });
+    }
 
-  await octokit.rest.issues.addLabels({
-    owner,
-    repo,
-    issue_number: pull_number,
-    labels: labelsWithColors,
-  });
+    await octokit.rest.issues.addLabels({
+      owner,
+      repo,
+      issue_number: pull_number,
+      labels: [label.name],
+    });
+  }
 }
 
 async function main() {
@@ -32,7 +52,6 @@ async function main() {
 
   console.log(owner, repo, pull_number);
 
-  // Add your labeling rules here
   const changedFiles = await octokit.rest.pulls.listFiles({
     owner,
     repo,
@@ -43,14 +62,18 @@ async function main() {
 
   for (const file of changedFiles.data) {
     if (file.filename.endsWith(".js")) {
-      labelsToApply.push("javascript-file");
+      labelsToApply.push({
+        name: "javascript-file",
+        color: "ffcc00",
+      });
     }
-    // Add more conditions as needed
   }
 
   if (labelsToApply.length > 0) {
     await applyLabels(octokit, owner, repo, pull_number, labelsToApply);
-    console.log(`Labels applied: ${labelsToApply.join(", ")}`);
+    console.log(
+      `Labels applied: ${labelsToApply.map((label) => label.name).join(", ")}`
+    );
   } else {
     console.log("No labels to apply.");
   }
