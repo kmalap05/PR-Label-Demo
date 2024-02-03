@@ -1,50 +1,13 @@
 const { context, getOctokit } = require("@actions/github");
 
-async function getLabel(octokit, owner, repo, labelName) {
-  try {
-    const { data } = await octokit.rest.issues.getLabel({
-      owner,
-      repo,
-      name: labelName,
-    });
-    return data;
-  } catch (error) {
-    if (error.status === 404) {
-      // Label not found
-      return null;
-    }
-    throw error;
-  }
-}
-
-async function createOrUpdateLabel(octokit, owner, repo, labelName, color) {
-  const existingLabel = await getLabel(octokit, owner, repo, labelName);
-
-  if (existingLabel) {
-    // Label exists, check if color matches
-    if (existingLabel.color.toLowerCase() !== color.toLowerCase()) {
-      // Update label color
-      await octokit.rest.issues.updateLabel({
-        owner,
-        repo,
-        current_name: labelName,
-        color,
-      });
-    }
-  } else {
-    // Label doesn't exist, create it
+async function applyLabels(octokit, owner, repo, pull_number, labels) {
+  for (const label of labels) {
     await octokit.rest.issues.createLabel({
       owner,
       repo,
-      name: labelName,
-      color,
+      name: label.name,
+      color: label.color,
     });
-  }
-}
-
-async function applyLabels(octokit, owner, repo, pull_number, labels) {
-  for (const label of labels) {
-    await createOrUpdateLabel(octokit, owner, repo, label.name, label.color);
 
     await octokit.rest.issues.addLabels({
       owner,
