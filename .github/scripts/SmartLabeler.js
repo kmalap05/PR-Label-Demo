@@ -82,11 +82,6 @@ async function main() {
   const { owner, repo } = context.repo;
   const { number, action } = context.payload;
 
-  // Log basic information
-  console.log(
-    `Repository: ${owner}/${repo}, Number: ${number}, Action: ${action}`
-  );
-
   // Check if the event is an 'opened' action
   if (action === "opened") {
     // Check if it's a pull request
